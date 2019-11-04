@@ -49,7 +49,7 @@ RUN ln -s /usr/local/bin/python3.7 /usr/bin/python
 
 RUN apt-get install bash -y
 RUN pip install bash_kernel
-RUN python -m bash_kernel.instal
+RUN python -m bash_kernel.install
 
 # Install miniconda to /miniconda
 RUN curl -LO http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
@@ -63,7 +63,9 @@ RUN conda update -y conda
 RUN conda install -c anaconda numpy
 RUN conda install -c anaconda scipy
 RUN apt-get install liblzma-dev
+RUN conda install -c conda-forge wordcloud -y
 RUN conda install -c anaconda pandas
+RUN conda install -c anaconda scikit-learn
 
 ENV MAIN_PATH=/usr/local/bin/jpl_config
 ENV LIBS_PATH=${MAIN_PATH}/libs
@@ -76,20 +78,20 @@ ENV NOTEBOOK_PATH=${MAIN_PATH}/notebooks
 RUN conda install --quiet --yes \
     'beautifulsoup4=4.8.*' \
     && \
-    conda clean --all -f -y && \
+    #conda clean --all -f -y && \
     # Activate ipywidgets extension in the environment that runs the notebook server
     #jupyter nbextension enable --py widgetsnbextension --sys-prefix && \
     # Also activate ipywidgets extension for JupyterLab
     # Check this URL for most recent compatibilities
     # https://github.com/jupyter-widgets/ipywidgets/tree/master/packages/jupyterlab-manager
     conda install -c conda-forge nodejs && \
-    
+
     jupyter labextension install @jupyter-widgets/jupyterlab-manager --no-build && \
     jupyter labextension install @lckr/jupyterlab_variableinspector --no-build && \
     jupyter labextension install jupyterlab-drawio --no-build && \
     jupyter lab build --dev-build=False
 
-
+ 
 
 
 EXPOSE 8888
